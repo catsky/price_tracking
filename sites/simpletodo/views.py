@@ -9,6 +9,7 @@ from django.contrib import messages
 from models import Todo
 
 class TodoForm(forms.ModelForm):
+    title = forms.CharField(label='请输入Amazon商品地址')
     class Meta:
         model = Todo
         fields = ('title',)
@@ -24,11 +25,20 @@ def new(request):
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.info(request, u'创建成功')
-            return HttpResponseRedirect(reverse("todo_idx"))
-    return render(request, 'todo/form.html', {'form': form})
+           # messages.info(request, u'跟踪成功')
+           # return HttpResponseRedirect(reverse("todo_idx"))
+	    return render(request, 'todo/add_track.html', {'form': form})
+    return render(request, 'todo/add_track.html', {'form': form})
 
+def addTrack(request):
+    form = TodoForm()
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            form.save()
+           # messages.info(request, u'跟踪成功')
+            return HttpResponseRedirect(reverse("todo_idx"))
+    return render(request, 'todo/add_track.html', {'form': form})
 
 def edit(request, id):
     edit_todo = get_object_or_404(Todo, id=id)

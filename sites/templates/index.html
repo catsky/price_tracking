@@ -13,7 +13,7 @@
                 </ul>
                 {% endif %}
 
-                <h2 class="box">待办事项</h2>
+                <h2 class="box">正在跟踪的亚马逊产品</h2>
                 <ul>
                     {% for todo in todos %}
                         <li {% if todo.finished == 1%} class="finished"{% endif %}>
@@ -33,9 +33,9 @@
             </div>
 
             <div class="box post">
-                <h2>新增</h2>
+                <h2>我要跟踪</h2>
                 <form action="{% url todo_new %}" method="post" id="post_new">
-                    {% csrf_token %}
+                    {% csrf_token %} 
                     {{form}}
                     <p><input type="submit" class="submit" value="添加" /></p>
                 </form>

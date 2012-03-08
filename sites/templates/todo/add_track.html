@@ -2,8 +2,8 @@
 
 {% block content %} 
         <div class="box post">
-            <h2>新增/修改链接</h2>
-            <form action="" method="post">
+            <h2>请确认您的跟踪信息</h2>
+            <form action="{% url todo_addtrack %}" method="post">
                 {% csrf_token %}
                 {{form.as_p}}
                 <p>
