@@ -1,25 +1,12 @@
 =======================
-simple-todo (Django 版)
+amazon price track (Django 版)
 =======================
 
 缘起
 ====
-simple-todo最早是web.py一个中文教程的例子。后来Uliweb的作者limodou
-认为这个教程很不错，于是有了Uliweb版的simple-todo。接着又有了Bottle版
-和Flask版。这俨然成了一个FrameworksShow项目。既然是FrameworksShow，
-那Django的总不应当缺了吧。
+在中国，海淘日益流行，特别是在amazon上购物成了广大淘友的最爱。如何跟踪那些即时打折的商品让网友不再错过好的宝贝，这是开发这个项目的初衷。
 
-simple-todo: 一个简易的 todo 程序
-http://simple-is-better.com/news/309
-
-Simple Todo (Uliweb 版本) 教程 by @limodou
-http://simple-is-better.com/news/312
-
-Simple-TODO Bottle 实现版 by @zoomquiet
-http://simple-is-better.com/news/509
-
-Simple-TODO Flask实现版 by @wyattwang
-http://simple-is-better.com/news/524
+我也是一个python的初学者，step by step 构建我们的应用.
 
 运行需求
 ========
@@ -45,9 +32,9 @@ Django Admin:
 
 #. 创建django project和app::
 
-    django-admin.py startproject simple_todo_site
-    cd simple_todo_site/
-    python manage.py startapp simpletodo
+    django-admin.py startproject 3haitao 
+    cd 3haitao/
+    python manage.py startapp 3haitao 
 
 #. 编辑settings.py完成数据库、模板、静态文件等配置，主要配置条目::
 
