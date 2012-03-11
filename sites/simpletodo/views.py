@@ -6,45 +6,67 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from models import Todo
+from models import Product
 
-class TodoForm(forms.ModelForm):
-    title = forms.CharField(label='请输入Amazon商品地址')
+class AddForm(forms.ModelForm):
+    productLink = forms.CharField(label='请输入Amazon商品地址')
     class Meta:
-        model = Todo
-        fields = ('title',)
+        model = Product
+        fields = ('productLink',)
+
+class TrackForm(forms.ModelForm):
+    productLink = forms.CharField(label='跟踪的商品地址', required=False)
+    productName = forms.CharField(label='商品名称', required=False)
+    star = forms.CharField(label='商品评级', required=False)
+    feature = forms.CharField(label='商品特性', required=False)
+    details = forms.CharField(label='商品详情', required=False)
+    originPrice = forms.CharField(label='原价', required=False)
+    currentPrice = forms.CharField(label='现价', required=False)
+    crawlDate = forms.DateTimeField(label='抓取时间', required=False)
+    inStock = forms.CharField(label='有货', required=False)
+    firstCommentDate = forms.DateTimeField(label='第一次评论时间', required=False)
+    firstComment = forms.CharField(label='第一次评论', required=False)
+    secondCommentDate = forms.DateTimeField(label='第二次评论时间', required=False)
+    secondComment = forms.CharField(label='第二次评论', required=False)
+    thirdCommentDate = forms.DateTimeField(label='第三次评论时间', required=False)
+    thirdComment = forms.CharField(label='第三次评论', required=False)
+    imageLink = forms.CharField(label='图像', required=False)
+    class Meta:
+        model = Product
+
+
 
 def index(request):
     ctx = {}
-    ctx['todos'] = Todo.objects.all().order_by('finished', '-id')
-    ctx['form'] = TodoForm()
+    ctx['todos'] = Product.objects.all().order_by('-id')
+    ctx['form'] = AddForm()
     return render(request, 'index.html', ctx)
 
 def new(request):
-    form = TodoForm()
+    form = AddForm()
     if request.method == "POST":
-        form = TodoForm(request.POST)
+        form = AddForm(request.POST)
         if form.is_valid():
-           # messages.info(request, u'跟踪成功')
-           # return HttpResponseRedirect(reverse("todo_idx"))
-	    return render(request, 'todo/add_track.html', {'form': form})
+            todo = Product(productLink=request.POST['productLink'])
+            trackForm = TrackForm(instance=todo)
+	    return render(request, 'todo/add_track.html', {'form': trackForm})
     return render(request, 'todo/add_track.html', {'form': form})
 
 def addTrack(request):
-    form = TodoForm()
+    trackForm = TrackForm()
     if request.method == "POST":
-        form = TodoForm(request.POST)
-        if form.is_valid():
-            form.save()
-           # messages.info(request, u'跟踪成功')
+        trackForm = TrackForm(request.POST)
+        if trackForm.is_valid():
+            trackForm.save()
+            messages.info(request, u'跟踪成功')
             return HttpResponseRedirect(reverse("todo_idx"))
-    return render(request, 'todo/add_track.html', {'form': form})
+    return render(request, 'todo/add_track.html', {'form': trackForm})
 
 def edit(request, id):
-    edit_todo = get_object_or_404(Todo, id=id)
-    form = TodoForm(instance=edit_todo)
+    edit_todo = get_object_or_404(Product, id=id)
+    form = TrackForm(instance=edit_todo)
     if request.method == "POST":
-        form = TodoForm(request.POST, instance=edit_todo)
+        form = TrackForm(request.POST, instance=edit_todo)
         if form.is_valid():
             form.save()
             messages.info(request, u'编辑成功')
@@ -52,23 +74,8 @@ def edit(request, id):
     return render(request, 'todo/form.html', {'form': form})
 
 def delete(request, id):
-    todo = get_object_or_404(Todo, id=id)
+    todo = get_object_or_404(Product, id=id)
     todo.delete()
     messages.info(request, u'成功删除')
     return HttpResponseRedirect(reverse("todo_idx"))
 
-def finish(request, id):
-    todo = get_object_or_404(Todo, id=id)
-    status = request.GET.get('status', '')
-    if status == 'yes':
-        finished = 1
-        todo.finished = finished
-    elif status == 'no':
-        finished = 0
-    else:
-        messages.info(request, u'非法请求')
-        return HttpResponseRedirect(reverse("todo_idx"))
-    todo.finished = finished
-    todo.save()
-    messages.info(request, u'修改成功')
-    return HttpResponseRedirect(reverse("todo_idx"))
