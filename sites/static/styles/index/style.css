@@ -14,6 +14,7 @@ body { background:#EEE; }
 .tips { color:#666; }
 .long_txt { width:98%; }
 .must_be { color:red !important; }
+.red {color:red }
 textarea { line-height:1.5em; }
 
 image { border:none; }

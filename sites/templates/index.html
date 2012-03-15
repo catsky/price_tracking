@@ -17,7 +17,7 @@
                 <ul>
                     {% for todo in todos %}
                         <li>
-                            {{todo.productName}}
+                            {{todo.productName}}(${{todo.originPrice}})--<span class="red">现价${{todo.currentPrice}}</span>
                             <a href="{% url todo_edit todo.id %}">修改</a>,
                             <a href="{% url todo_delete todo.id %}" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
                         </li>

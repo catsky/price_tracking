@@ -9,7 +9,7 @@ from django.contrib import messages
 from models import Product
 
 import urllib2
-from BeautifulSoup import BeautifulSoup
+import lxml.html.soupparser as soupparser
 
 class AddForm(forms.ModelForm):
     productLink = forms.CharField(label='请输入Amazon商品地址')
@@ -51,11 +51,20 @@ def new(request):
         form = AddForm(request.POST)
         if form.is_valid():
             src = urllib2.urlopen(request.POST['productLink'])
-            parser = BeautifulSoup(src)
-            title_p = parser.find('span', {'id':'btAsinTitle'})
-            title = title_p.contents[0]
+            dom = soupparser.fromstring(src)
+            #doc = dom.parse(dom)
+            listprice = dom.xpath("//span[@id='listPriceValue']")[0].text[1:].encode('utf-8')
+            curprice = dom.xpath("//span[@id='actualPriceValue']/b[@class='priceLarge']")[0].text[1:].encode('utf-8')
+            prodname = dom.xpath("//span[@id='btAsinTitle']")[0].text.encode('utf-8')
+            instock = dom.xpath("//div[@class='buying']/span[@class='availGreen']")[0].text.encode('utf-8')            
+            imglink = dom.xpath("//div[@id='prodImageContainer']/div[@id='prodImageCell']/img[@id='prodImage']/@src")[0].text.encode('utf-8')            
+            if instock == "In Stock.":
+                instock = True
+            else:
+                instock = False
                         
-            todo = Product(productLink=request.POST['productLink'], productName=title)
+            todo = Product(productLink=request.POST['productLink'], productName=prodname, 
+                            originPrice=listprice, currentPrice=curprice,inStock=instock)
             trackForm = TrackForm(instance=todo)
 	    return render(request, 'todo/add_track.html', {'form': trackForm})
     return render(request, 'todo/add_track.html', {'form': form})
